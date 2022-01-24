@@ -1,9 +1,6 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.OrderDto;
-import com.example.demo.dto.OrderSearchDto;
-import com.example.demo.dto.ProductDto;
-import com.example.demo.dto.ProductInfoDto;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -32,7 +29,7 @@ public class OrderService {
                 .map(productInfoDto -> {
                     orderDto.setProductName(productInfoDto.getProductName());
                     orderDto.setProductId(productInfoDto.getProductId());
-                    String productScore = productInfoDto.getProductScore();
+                    Double productScore = productInfoDto.getProductScore();
                     return orderDto;
                 });
     }

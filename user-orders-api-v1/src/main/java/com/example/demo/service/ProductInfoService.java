@@ -1,20 +1,27 @@
 package com.example.demo.service;
 
 import com.example.demo.dto.ProductInfoDto;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 
+import java.util.Comparator;
+
 @Service
 public class ProductInfoService {
 
-    private final WebClient webClient = WebClient.builder()
-            .baseUrl("http://localhost:8082")
-            .build();
+    public static final String BASE_PATH = "/productInfoService/product/names";
+
+    private final WebClient webClient;
+
+    public ProductInfoService(@Qualifier("productInfoWebClient") WebClient webClient) {
+        this.webClient = webClient;
+    }
 
     public Flux<ProductInfoDto> getProductInfo(String productCode) {
-        String uri = UriComponentsBuilder.fromUriString("/productInfoService/product/names")
+        String uri = UriComponentsBuilder.fromUriString(BASE_PATH)
                 .queryParam("productCode", productCode)
                 .buildAndExpand()
                 .toUriString();
@@ -22,7 +29,8 @@ public class ProductInfoService {
                 .uri(uri)
                 .retrieve()
                 .bodyToFlux(ProductInfoDto.class)
-                .map(productInfoDto -> productInfoDto)
+                .sort(Comparator.comparing(ProductInfoDto::getProductScore))
+                .takeLast(1)
                 .log();
     }
 

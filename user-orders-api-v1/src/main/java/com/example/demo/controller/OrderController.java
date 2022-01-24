@@ -14,7 +14,7 @@ import reactor.core.publisher.Flux;
 @AllArgsConstructor
 public class OrderController {
 
-    private OrderService orderService;
+    private final OrderService orderService;
 
     @GetMapping("/{userId}")
     public Flux<OrderDto> getOrders(@PathVariable String userId) {
