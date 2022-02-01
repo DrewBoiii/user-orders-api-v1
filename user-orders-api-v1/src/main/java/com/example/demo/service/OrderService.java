@@ -21,8 +21,8 @@ public class OrderService {
                 .flatMap(this::enrichWithProductInfo);
     }
 
-    private Flux<OrderDto> getOrderSearchInfo(final User user) {
-        final String phoneNumber = user.getPhone();
+    private Flux<OrderDto> getOrderSearchInfo(User user) {
+        String phoneNumber = user.getPhone();
         return orderSearchService.getOrderSearch(phoneNumber)
                 .map(orderSearchDto -> {
                     OrderDto orderDto = new OrderDto();
